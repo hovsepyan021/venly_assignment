@@ -22,5 +22,8 @@ public interface WordRelationRepository extends JpaRepository<WordRelation, Long
             @Param("word2") String word2,
             @Param("relation") String relation
     );
+
+    @Query("SELECT wr FROM WordRelation wr WHERE wr.word = :word OR wr.relatedWord = :word")
+    List<WordRelation> findByWord(String word);
 }
 

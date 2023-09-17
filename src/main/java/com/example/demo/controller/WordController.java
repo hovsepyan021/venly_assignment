@@ -1,10 +1,11 @@
 package com.example.demo.controller;
 
+import com.example.demo.helper.WordRelationService;
 import com.example.demo.models.WordRelation;
 import com.example.demo.models.WordRelationInversed;
 import com.example.demo.repositories.WordRelationRepository;
 import com.example.demo.requests.AddWordRequest;
-import com.example.demo.validators.ValidAddWord;
+import com.example.demo.requests.GetPathRequest;
 import com.example.demo.validators.ValidationErrorException;
 import com.example.demo.validators.ValidationErrorResponse;
 import org.apache.logging.log4j.util.Strings;
@@ -21,15 +22,13 @@ import java.util.List;
 public class WordController {
     private final WordRelationRepository wordRepository;
 
-    public WordController(WordRelationRepository wordRepository) {
-        this.wordRepository = wordRepository;
-    }
+    private final WordRelationService wordRelationService;
 
-//    @GetMapping("/{id}")
-//    public WordRelation getWordById(@PathVariable Long id) {
-//        return wordRepository.findById(id)
-//                .orElseThrow(() -> new RuntimeException("Word not found with id: " + id));
-//    }
+    public WordController(WordRelationRepository wordRepository,
+                          WordRelationService wordRelationService) {
+        this.wordRepository = wordRepository;
+        this.wordRelationService = wordRelationService;
+    }
 
     @PostMapping("/add")
     public ResponseEntity<String> addWord(@RequestBody @Valid AddWordRequest wordRequest) {
@@ -63,6 +62,11 @@ public class WordController {
             result.add(new WordRelationInversed(wordRelation.getId(), wordRelation.getRelatedWord(), wordRelation.getWord(), wordRelation.getRelation(), true));
         });
         return result;
+    }
+
+    @PostMapping("/path")
+    public String findPath(@RequestBody GetPathRequest wordRequest) {
+        return wordRelationService.findRelationPath(wordRequest.getWord1(), wordRequest.getWord2());
     }
 
     private void failIfRelationExists(WordRelation wordRelation) {

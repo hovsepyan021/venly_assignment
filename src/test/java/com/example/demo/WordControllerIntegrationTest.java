@@ -3,6 +3,7 @@ package com.example.demo;
 import com.example.demo.models.WordRelation;
 import com.example.demo.models.WordRelationInversed;
 import com.example.demo.requests.AddWordRequest;
+import com.example.demo.requests.GetPathRequest;
 import com.example.demo.validators.ValidationErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -223,6 +224,21 @@ public class WordControllerIntegrationTest {
 		ValidationErrorResponse validationErrorResponse = validationErrorResponseList.get(0);
 		assertEquals("relation/word1/word2", validationErrorResponse.getInvalidField());
 		assertEquals("Inverse relation already exists", validationErrorResponse.getValidationMessage());
+	}
+
+	@Test
+	public void testFindPath() throws Exception {
+		GetPathRequest request = new GetPathRequest();
+		request.setWord1("avenue");
+		request.setWord2("street");
+
+		ResultActions addResult = mockMvc.perform(MockMvcRequestBuilders.post("/words/path")
+				.content(request.toString())
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON));
+
+		String content = addResult.andReturn().getResponse().getContentAsString();
+		assertEquals("avenue --> (related) --> road --> (synonym) --> street", content);
 	}
 }
 
