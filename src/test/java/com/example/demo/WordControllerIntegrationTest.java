@@ -75,7 +75,7 @@ public class WordControllerIntegrationTest {
 
 		String content = result.getResponse().getContentAsString();
 		List<WordRelation> wordRelations = objectMapper.readValue(content, new TypeReference<List<WordRelation>>() {});
-		assertEquals(5, wordRelations.size());
+		assertEquals(6, wordRelations.size());
 		WordRelation firstWordRelation = wordRelations.get(0);
 		assertEquals("son", firstWordRelation.getWord());
 		assertEquals("daughter", firstWordRelation.getRelatedWord());
@@ -103,14 +103,14 @@ public class WordControllerIntegrationTest {
 
 		String content = result.getResponse().getContentAsString();
 		List<WordRelationInversed> wordRelations = objectMapper.readValue(content, new TypeReference<List<WordRelationInversed>>() {});
-		assertEquals(10, wordRelations.size());
+		assertEquals(12, wordRelations.size());
 		WordRelationInversed firstWordRelation = wordRelations.get(0);
 		assertEquals("son", firstWordRelation.getWord());
 		assertEquals("daughter", firstWordRelation.getRelatedWord());
 		assertEquals("antonym", firstWordRelation.getRelation());
 		assertFalse(firstWordRelation.isInversed());
 
-		WordRelationInversed firstInversedWordRelation = wordRelations.get(5);
+		WordRelationInversed firstInversedWordRelation = wordRelations.get(6);
 		assertEquals("son", firstInversedWordRelation.getRelatedWord());
 		assertEquals("daughter", firstInversedWordRelation.getWord());
 		assertEquals("antonym", firstInversedWordRelation.getRelation());
